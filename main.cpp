@@ -1,32 +1,29 @@
-#include <Windows.h>
-#include <KamataEngine.h>
 #include "GameScene.h"
+#include "KamataEngine.h"
+#include <Windows.h>
 
 using namespace KamataEngine;
 
 // Windowsアプリでのエントリーポイント(main関数)
 int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int) {
-	
-	//エンジンの初期化
+	// エンジンの初期化
 	KamataEngine::Initialize(L"GC2C_07_タマイ_ユウスケ_AL3");
 
-	// DirectXCommonのインスタンスの取得
+	// DirectXの機能取得
 	DirectXCommon* dxCommon = DirectXCommon::GetInstance();
-	// ゲームシーンのインスタンス処理
-	GameScene* gameScene = new GameScene();
 
-	//ゲームシーンのインスタンス処理
+	// ゲームシーンの取得・初期化
+	GameScene* gameScene = new GameScene();
 	gameScene->Initialize();
 
-	//メインループ
+	// メインループ
 	while (true) {
-	//エンジンの更新
+		// エンジンの更新
 		if (KamataEngine::Update()) {
-
-		break;
+			break;
 		}
 
-		//ゲームシーンの更新
+		// ゲームシーンの更新
 		gameScene->Update();
 
 		// 描画開始
@@ -37,15 +34,12 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int) {
 
 		// 描画終了
 		dxCommon->PostDraw();
-
 	}
-	//ゲームシーンの解放
-	delete gameScene;
 
-	//nullptrの代入
+	// ゲームシーンの解放
+	delete gameScene;
 	gameScene = nullptr;
 
-	//エンジンのメイン処理
 	KamataEngine::Finalize();
 
 	return 0;
