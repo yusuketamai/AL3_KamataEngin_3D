@@ -30,4 +30,6 @@ public:
 
 	// デバッグカメラ有効
 	bool isDebugCameraActive_ = false;
+
+	KamataEngine::Model* model_Skydome = nullptr;
 };

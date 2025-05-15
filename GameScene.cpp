@@ -52,6 +52,7 @@ void GameScene::Initialize() {
 GameScene::~GameScene() {
 	// モデルの解放
 	delete modelBlock_;
+	delete modelSkydome_;
 	modelBlock_ = nullptr;
 
 	// 箱の解放
@@ -65,6 +66,8 @@ GameScene::~GameScene() {
 	// デバックカメラの解放
 	delete debugCamera_;
 	debugCamera_ = nullptr;
+
+
 }
 
 void GameScene::Update() {
