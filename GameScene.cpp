@@ -5,9 +5,13 @@ using namespace MathUtility;
 
 void GameScene::Initialize() {
 	// 3dモデルの生成
-	modelBlock_ = Model::Create();
+	modelBlock_ = Model::CreateFromOBJ("cube", true);
 
 	modelSkydome_ = Model::CreateFromOBJ("Skydome", true);
+
+	modelPlayer_ = Model::CreateFromOBJ("player", true);
+
+	
 
 	// skydomeの生成
 	skydome_ = new Skydome();
@@ -15,8 +19,14 @@ void GameScene::Initialize() {
 	// skydomeの初期化
 	skydome_->Initialize(modelSkydome_, &camera_);
 
+	//playerの生成
+	player_ = new Player();
+
+	// playerの初期化
+	player_->Initialize(modelPlayer_, &camera_);
+
 	//// 3dモデルの生成
-	// modelSkydome_ = Model::Create();
+
 
 	// カメラの初期化
 	camera_.Initialize();
@@ -29,8 +39,8 @@ void GameScene::Initialize() {
 	const uint32_t kNumBlockHorizontal = 20; // 横
 
 	// ブロック1個分の幅
-	const float kBlockWidth = 2.0f;  // 縦
-	const float kBlockHeight = 2.0f; // 横
+	const float kBlockWidth = 1.0f;  // 縦
+	const float kBlockHeight = 1.0f; // 横
 
 	// 要素数を変更する
 	worldTransformBlocks_.resize(kNumBlockVertical);
@@ -69,6 +79,17 @@ GameScene::~GameScene() {
 	delete modelSkydome_;
 	modelSkydome_ = nullptr;
 
+	delete skydome_;
+	skydome_ = nullptr;
+
+	//モデルplayerの開放
+	delete modelPlayer_;
+	modelPlayer_ = nullptr;
+
+	//playerの開放
+	delete player_;
+	player_ = nullptr;
+
 	// 箱の解放
 	for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
 		for (WorldTransform* worldTransformBlock : worldTransformBlockLine) {
@@ -101,6 +122,9 @@ void GameScene::Update() {
 
 	// skydomeのUPdate
 	skydome_->Update();
+
+	//playerのUPdate
+	player_->Update();
 
 	// デバックカメラの更新
 	debugCamera_->Update();
@@ -145,6 +169,8 @@ void GameScene::Draw() {
 	}
 
 	skydome_->Draw();
+
+	player_->Draw();
 
 	// 3Dモデルの描画後処理
 	Model::PostDraw();

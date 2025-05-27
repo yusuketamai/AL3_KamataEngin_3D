@@ -23,12 +23,15 @@ void Skydome::Initialize(Model* model, Camera* camera) {
 	worldTransform_->rotation_.y = 90 * static_cast<float>(M_PI / 180);
 }
 
-Skydome::~Skydome() {}
+Skydome::~Skydome() 
+{ 
+	delete worldTransform_;
+	worldTransform_ = nullptr;
+}
 
 void Skydome::Update() { 
 	
 	worldTransform_->UpdateMatrix(); 
-
 }
 
 void Skydome::Draw() { 
