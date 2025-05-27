@@ -13,3 +13,10 @@ void WorldTransform::MakeAfinneMatrix() {
 	Matrix4x4 translationMatrix_ = MakeTranslateMatrix(translation_);                                         // 平行移動
 	matWorld_ = scaleMatrix_ * (rotationMatrixX_ * rotationMatrixY_ * rotationMatrixZ_) * translationMatrix_; // アフィン変換行列;
 }
+
+void WorldTransform::UpdateMatrix(){
+
+	MakeAfinneMatrix();
+	TransferMatrix();
+
+}
