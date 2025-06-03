@@ -11,7 +11,11 @@ void GameScene::Initialize() {
 
 	modelPlayer_ = Model::CreateFromOBJ("player", true);
 
-	
+
+	mapChipField_ = new MapChipField;
+	mapChipField_->LoadMapChipCsv("Resouces/blocks.csv");
+
+	GenerateBlocks();
 
 	// skydomeの生成
 	skydome_ = new Skydome();
@@ -89,6 +93,9 @@ GameScene::~GameScene() {
 	//playerの開放
 	delete player_;
 	player_ = nullptr;
+
+	//マップチップフィールドの解放
+	delete mapChipField_;
 
 	// 箱の解放
 	for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
@@ -174,4 +181,11 @@ void GameScene::Draw() {
 
 	// 3Dモデルの描画後処理
 	Model::PostDraw();
+}
+
+void GameScene::GenerateBlocks() {
+
+	//要素数
+	uint32_t numBlockVirtical = mapChipField_->kNumBlockVirtalcal;
+
 }
