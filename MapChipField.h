@@ -30,6 +30,8 @@ public:
 
 	void LoadMapChipCsv(const std::string& filePath);
 
+
+
 	MapChipType GetmapChiptypeByIndex(uint32_t xIndex, uint32_t yIndex);
 
 	KamataEngine::Vector3 GetMapChippositionByIndex(uint32_t xIndex, uint32_t yIndex);

@@ -186,6 +186,14 @@ void GameScene::Draw() {
 void GameScene::GenerateBlocks() {
 
 	//要素数
-	uint32_t numBlockVirtical = mapChipField_->kNumBlockVirtalcal;
+	uint32_t numBlockVirtical = mapChipField_->GetNumBlockVirtalcal();
+	uint32_t numBlockHorizontal = mapChipField_->GetNumBlockHorizontal();
+
+	// 要素数を変更する
+	//列数を設定
+	worldTransformBlocks_.resize(/*縦*/);
+	for (uint32_t i = 0; i < /*縦*/; i++) {
+		worldTransformBlocks_[i].resize(/*縦*/);
+	}
 
 }
