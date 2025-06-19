@@ -17,7 +17,7 @@ void MapChipField::ResetMapChipData() {
 
 	// マップチップデータをリセット
 	mapChipData_.data.clear();
-	mapChipData_.data.resize(kNumBlockVirtalcal);
+	mapChipData_.data.resize(kNumBlockVirtical);
 	for (std::vector<MapChipType>& mapChipDataLine : mapChipData_.data) {
 		mapChipDataLine.resize(kNumBlockHorizontal);
 	}
@@ -40,7 +40,7 @@ void MapChipField::LoadMapChipCsv(const std::string& filePath) {
 	file.close();
 
 	//CSVからマップチップデータを読み込む
-	for (uint32_t i = 0; i < kNumBlockVirtalcal; ++i) {
+	for (uint32_t i = 0; i < kNumBlockVirtical; ++i) {
 		std::string line;
 		getline(mapChipCsv, line);
 
@@ -67,7 +67,7 @@ MapChipType MapChipField::GetmapChiptypeByIndex(uint32_t xIndex, uint32_t yIndex
 
 		return MapChipType::kBlank;
 	}
-	if (yIndex < 0 || kNumBlockVirtalcal - 1 < yIndex) {
+	if (yIndex < 0 || kNumBlockVirtical - 1 < yIndex) {
 
 		return MapChipType::kBlank;
 	}
@@ -79,6 +79,6 @@ MapChipType MapChipField::GetmapChiptypeByIndex(uint32_t xIndex, uint32_t yIndex
 KamataEngine::Vector3 MapChipField::GetMapChippositionByIndex(uint32_t xIndex, uint32_t yIndex) { 
 	
 	return KamataEngine::Vector3(kBlockWidth*xIndex,
-		kBlockHeight*(kNumBlockVirtalcal-1-yIndex),0);
+		kBlockHeight*(kNumBlockVirtical-1-yIndex),0);
 
 }

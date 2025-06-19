@@ -43,8 +43,8 @@ void GameScene::Initialize() {
 	const uint32_t kNumBlockHorizontal = 20; // 横
 
 	// ブロック1個分の幅
-	const float kBlockWidth = 1.0f;  // 縦
-	const float kBlockHeight = 1.0f; // 横
+	//const float kBlockWidth = 1.0f;  // 縦
+	//const float kBlockHeight = 1.0f; // 横
 
 	// 要素数を変更する
 	worldTransformBlocks_.resize(kNumBlockVertical);
@@ -56,19 +56,19 @@ void GameScene::Initialize() {
 	// ブロックの生成
 	for (uint32_t i = 0; i < kNumBlockVertical; i++) {
 		for (uint32_t j = 0; j < kNumBlockHorizontal; j++) {
-			if ((j % 2 == 0 && i % 2 == 0) || (j % 2 == 1 && i % 2 == 1)) {
+			if (mapChipField_->GetmapChiptypeByIndex(j, i) == MapChipType::kBlock) {
 
 				// ワールドトランスフォームの生成
-				worldTransformBlocks_[i][j] = new WorldTransform();
+				WorldTransform* worldTransform = new WorldTransform();
 
 				// ワールドトランスフォームの初期化
-				worldTransformBlocks_[i][j]->Initialize();
+				worldTransform->Initialize();
 
 				// x座標
-				worldTransformBlocks_[i][j]->translation_.x = kBlockWidth * j;
+				worldTransformBlocks_[i][j]= worldTransform;
 
 				// y座標
-				worldTransformBlocks_[i][j]->translation_.y = kBlockHeight * i;
+				worldTransformBlocks_[i][j]->translation_ = mapChipField_->GetMapChippositionByIndex(j,i);
 			}
 		}
 	}
@@ -186,14 +186,14 @@ void GameScene::Draw() {
 void GameScene::GenerateBlocks() {
 
 	//要素数
-	uint32_t numBlockVirtical = mapChipField_->GetNumBlockVirtalcal();
+	uint32_t numBlockVirtical = mapChipField_->GetNumBlockVirtical();
 	uint32_t numBlockHorizontal = mapChipField_->GetNumBlockHorizontal();
 
 	// 要素数を変更する
 	//列数を設定
-	worldTransformBlocks_.resize(/*縦*/);
-	for (uint32_t i = 0; i < /*縦*/; i++) {
-		worldTransformBlocks_[i].resize(/*縦*/);
+	worldTransformBlocks_.resize(numBlockVirtical);
+	for (uint32_t i = 0; i < numBlockVirtical; i++) {
+		worldTransformBlocks_[i].resize(numBlockHorizontal);
 	}
 
 }
