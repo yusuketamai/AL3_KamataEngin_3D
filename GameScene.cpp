@@ -13,7 +13,7 @@ void GameScene::Initialize() {
 
 
 	mapChipField_ = new MapChipField;
-	mapChipField_->LoadMapChipCsv("Resouces/blocks.csv");
+	mapChipField_->LoadMapChipCsv("Resources/blocks.csv");
 
 	GenerateBlocks();
 
@@ -38,40 +38,40 @@ void GameScene::Initialize() {
 	// デバックカメラの生成
 	debugCamera_ = new DebugCamera(1280, 720);
 
-	// 要素数
-	const uint32_t kNumBlockVertical = 10;   // 縦
-	const uint32_t kNumBlockHorizontal = 20; // 横
+	//// 要素数
+	//const uint32_t kNumBlockVertical = 10;   // 縦
+	//const uint32_t kNumBlockHorizontal = 20; // 横
 
 	// ブロック1個分の幅
 	//const float kBlockWidth = 1.0f;  // 縦
 	//const float kBlockHeight = 1.0f; // 横
 
-	// 要素数を変更する
-	worldTransformBlocks_.resize(kNumBlockVertical);
-	for (uint32_t i = 0; i < kNumBlockVertical; i++) {
-		// 1列の要素数を設定(横方向のブロック数)
-		worldTransformBlocks_[i].resize(kNumBlockHorizontal);
-	}
+	//// 要素数を変更する
+	//worldTransformBlocks_.resize(kNumBlockVertical);
+	//for (uint32_t i = 0; i < kNumBlockVertical; i++) {
+	//	// 1列の要素数を設定(横方向のブロック数)
+	//	worldTransformBlocks_[i].resize(kNumBlockHorizontal);
+	//}
 
-	// ブロックの生成
-	for (uint32_t i = 0; i < kNumBlockVertical; i++) {
-		for (uint32_t j = 0; j < kNumBlockHorizontal; j++) {
-			if (mapChipField_->GetmapChiptypeByIndex(j, i) == MapChipType::kBlock) {
+	//// ブロックの生成
+	//for (uint32_t i = 0; i < kNumBlockVertical; i++) {
+	//	for (uint32_t j = 0; j < kNumBlockHorizontal; j++) {
+	//		if (mapChipField_->GetmapChiptypeByIndex(j, i) == MapChipType::kBlock) {
 
-				// ワールドトランスフォームの生成
-				WorldTransform* worldTransform = new WorldTransform();
+	//			// ワールドトランスフォームの生成
+	//			WorldTransform* worldTransform = new WorldTransform();
 
-				// ワールドトランスフォームの初期化
-				worldTransform->Initialize();
+	//			// ワールドトランスフォームの初期化
+	//			worldTransform->Initialize();
 
-				// x座標
-				worldTransformBlocks_[i][j]= worldTransform;
+	//			// x座標
+	//			worldTransformBlocks_[i][j]= worldTransform;
 
-				// y座標
-				worldTransformBlocks_[i][j]->translation_ = mapChipField_->GetMapChippositionByIndex(j,i);
-			}
-		}
-	}
+	//			// y座標
+	//			worldTransformBlocks_[i][j]->translation_ = mapChipField_->GetMapChippositionByIndex(j,i);
+	//		}
+	//	}
+	//}
 }
 
 GameScene::~GameScene() {
@@ -196,4 +196,16 @@ void GameScene::GenerateBlocks() {
 		worldTransformBlocks_[i].resize(numBlockHorizontal);
 	}
 
+	// ブロックの生成
+	for (uint32_t i = 0; i < numBlockVirtical; i++) {
+		for (uint32_t j = 0; j < numBlockHorizontal; j++) {
+			if (mapChipField_->GetmapChiptypeByIndex(j, i) == MapChipType::kBlock) {
+
+				WorldTransform* worldTransform = new WorldTransform();
+				worldTransform->Initialize();
+				worldTransformBlocks_[i][j] = worldTransform;
+				worldTransformBlocks_[i][j]->translation_ = mapChipField_->GetMapChippositionByIndex(j, i);
+			}
+		}
+	}
 }
