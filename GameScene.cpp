@@ -26,8 +26,7 @@ void GameScene::Initialize() {
 	//playerの生成
 	player_ = new Player();
 
-	// playerの初期化
-	player_->Initialize(modelPlayer_, &camera_);
+	
 
 	//// 3dモデルの生成
 
@@ -38,40 +37,13 @@ void GameScene::Initialize() {
 	// デバックカメラの生成
 	debugCamera_ = new DebugCamera(1280, 720);
 
-	//// 要素数
-	//const uint32_t kNumBlockVertical = 10;   // 縦
-	//const uint32_t kNumBlockHorizontal = 20; // 横
+	//座標をマップチップ番号で指定
+	Vector3 playerPosition = mapChipField_->GetMapChippositionByIndex(1,18);
 
-	// ブロック1個分の幅
-	//const float kBlockWidth = 1.0f;  // 縦
-	//const float kBlockHeight = 1.0f; // 横
+	// playerの初期化
+	player_->Initialize(modelPlayer_, &camera_, playerPosition);
 
-	//// 要素数を変更する
-	//worldTransformBlocks_.resize(kNumBlockVertical);
-	//for (uint32_t i = 0; i < kNumBlockVertical; i++) {
-	//	// 1列の要素数を設定(横方向のブロック数)
-	//	worldTransformBlocks_[i].resize(kNumBlockHorizontal);
-	//}
 
-	//// ブロックの生成
-	//for (uint32_t i = 0; i < kNumBlockVertical; i++) {
-	//	for (uint32_t j = 0; j < kNumBlockHorizontal; j++) {
-	//		if (mapChipField_->GetmapChiptypeByIndex(j, i) == MapChipType::kBlock) {
-
-	//			// ワールドトランスフォームの生成
-	//			WorldTransform* worldTransform = new WorldTransform();
-
-	//			// ワールドトランスフォームの初期化
-	//			worldTransform->Initialize();
-
-	//			// x座標
-	//			worldTransformBlocks_[i][j]= worldTransform;
-
-	//			// y座標
-	//			worldTransformBlocks_[i][j]->translation_ = mapChipField_->GetMapChippositionByIndex(j,i);
-	//		}
-	//	}
-	//}
 }
 
 GameScene::~GameScene() {
