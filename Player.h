@@ -1,10 +1,14 @@
 #pragma once
 #include "KamataEngine.h"
 
+
 class Player {
 public:
+
+	KamataEngine::Vector3 velocity_ = {};
+
 	// 初期化
-	void Initialize(KamataEngine::Model* model, KamataEngine::Camera* camera,const Vector3& position);
+	void Initialize(KamataEngine::Model* model, KamataEngine::Camera* camera, const KamataEngine::Vector3& position);
 
 	// 更新
 	void Update();
@@ -12,7 +16,7 @@ public:
 	// 描画
 	void Draw();
 
-	Vector3 velocity_ = {};
+
 
 	static inline const float kAcceleration = {};
 
@@ -27,6 +31,6 @@ private:
 
 	KamataEngine::Camera* camera_ = nullptr;
 
-	
+		
 
 };

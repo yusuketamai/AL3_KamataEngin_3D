@@ -44,7 +44,11 @@ void Player::Update() {
 	worldTransform_.translation_ += velocity_;
 
 	//行列更新
-
+	
 }
 
-void Player::Draw() { model_->Draw(worldTransform_, *camera_ ); }
+void Player::Draw() { 
+
+	model_->Draw(worldTransform_, *camera_ );
+
+}
