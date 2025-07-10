@@ -77,7 +77,7 @@ void Player::Update() {
 	if (turnTimer_>0.0f)
 	{
 
-
+		//
 
 		// 左右の自キャラの角度テーブル
 		float destinationRotationYTable[] = {
