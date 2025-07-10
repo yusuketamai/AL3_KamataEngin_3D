@@ -30,7 +30,7 @@ public:
 	// 旋回開始時の角度
 	float turnFirstRotationY_ = 0.0f;
 	// 旋回タイマー
-	float turenTimer_ = 0.0f;
+	float turnTimer_ = 0.0f;
 
 	// 旋回時間<秒>
 	static inline const float kTimeTurn = 0.3f;

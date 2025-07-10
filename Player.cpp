@@ -36,7 +36,7 @@ void Player::Update() {
 				//旋回開始時の角度を記録する
 				turnFirstRotationY_ = worldTransform_.rotation_.y;
 				//旋回タイマーに時間を設定する
-				turnTimer_=kTimerTurn
+				turnTimer_ = kTimeTurn;
 			}
 
 			acceleration.x += kAcceleration;
@@ -74,7 +74,11 @@ void Player::Update() {
 	worldTransform_.UpdateMatrix();
 
 	// 旋回制御
+	if (turnTimer_>0.0f)
 	{
+
+
+
 		// 左右の自キャラの角度テーブル
 		float destinationRotationYTable[] = {
 			
