@@ -1,8 +1,11 @@
 #include "3d\WorldTransform.h"
 #include <math\MathUtility.h>
+#include<cmath>
+#include <numbers>
 
 using namespace KamataEngine;
 using namespace MathUtility;
+
 
 void WorldTransform::MakeAfinneMatrix() {
 	// アフィン変換行列の作成
@@ -20,3 +23,9 @@ void WorldTransform::UpdateMatrix(){
 	TransferMatrix();
 
 }
+
+float WorldTransform::EaseInOut(float x1, float x2, float t) {
+	float easedT = -(std::cosf(std::numbers::pi_v<float> * t) - 1.0f) / 2.0f;
+	return Lerp(x1, x2, easedT);
+}
+

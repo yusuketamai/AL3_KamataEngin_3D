@@ -16,9 +16,9 @@ public:
 
 	static inline const float kAcceleration = 0.3f;
 
-	static inline const float kAttenuation = 0.8f;
+	static inline const float kAttenuation = 0.5f;
 
-	static inline const float kLimitRunSpeed = 0.5f;
+	static inline const float kLimitRunSpeed = 0.3f;
 
 	enum class LRDirection {
 		kRight,
@@ -34,6 +34,18 @@ public:
 
 	// 旋回時間<秒>
 	static inline const float kTimeTurn = 0.3f;
+
+	//接地状態フラグ
+	bool onGround_ = true;
+
+	//重力加速度(下方向)
+	static inline const float kGravityAcceleration = 0.1f;
+
+	// 最大落下速度(下方向)
+	static inline const float kLimutFallSpeed = 0.5f;
+
+	// ジャンプ初速(上方向)
+	static inline const float kJumpAcceleration = 0.5f;
 
 private:
 	// ワールド変換データ
