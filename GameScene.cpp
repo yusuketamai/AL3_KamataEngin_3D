@@ -23,13 +23,6 @@ void GameScene::Initialize() {
 	// skydomeの初期化
 	skydome_->Initialize(modelSkydome_, &camera_);
 
-	//playerの生成
-	player_ = new Player();
-
-	
-
-	//// 3dモデルの生成
-
 
 	// カメラの初期化
 	camera_.Initialize();
@@ -37,13 +30,25 @@ void GameScene::Initialize() {
 	// デバックカメラの生成
 	debugCamera_ = new DebugCamera(1280, 720);
 
+
 	//座標をマップチップ番号で指定
 	Vector3 playerPosition = mapChipField_->GetMapChippositionByIndex(1,18);
 	
+	// playerの生成
+	player_ = new Player();
+
 	// playerの初期化
 	player_->Initialize(modelPlayer_, &camera_, playerPosition);
 
 
+	//カメラコントローラーの生成
+	cameraController_ = new CameraController;
+
+	cameraController_->Initialize();
+
+	cameraController_->SetTarget(player_);
+
+	cameraController_->Reset();
 }
 
 GameScene::~GameScene() {
@@ -107,6 +112,10 @@ void GameScene::Update() {
 
 	// デバックカメラの更新
 	debugCamera_->Update();
+
+	//カメラコントローラーの更新
+	cameraController_->UPdate();
+
 #ifdef _DEBUG
 	if (Input::GetInstance()->TriggerKey(DIK_D)) {
 		isDebugCameraActive_ = !isDebugCameraActive_; // デバックカメラの有効無効を切り替え

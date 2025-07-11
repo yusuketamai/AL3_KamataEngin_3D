@@ -4,6 +4,8 @@
 #include "player.h"
 #include <vector>
 #include "MapChipField.h"
+#include "CameraController.h"
+
 
 class GameScene {
 public:
@@ -48,5 +50,13 @@ public:
 
 	Player* player_ = nullptr;
 
+	//カメラコントローラー3Dモデル
+	KamataEngine::Model* modelcameraController_ = nullptr;
+
+	//CameraController
+	CameraController* cameraController_ = nullptr;
+
 	void GenerateBlocks();
+
+
 };
