@@ -49,6 +49,9 @@ void GameScene::Initialize() {
 	cameraController_->SetTarget(player_);
 
 	cameraController_->Reset();
+
+	CameraController::Rect cameraArea = {12.0f, 100 - 12.0f, 6.0f, 6.0f};
+	cameraController_->SetMovableArea(cameraArea);
 }
 
 GameScene::~GameScene() {
@@ -116,6 +119,8 @@ void GameScene::Update() {
 	//カメラコントローラーの更新
 	cameraController_->UPdate();
 
+	
+
 #ifdef _DEBUG
 	if (Input::GetInstance()->TriggerKey(DIK_D)) {
 		isDebugCameraActive_ = !isDebugCameraActive_; // デバックカメラの有効無効を切り替え
@@ -133,8 +138,13 @@ void GameScene::Update() {
 		camera_.TransferMatrix();
 	} else {
 		// ビュープロダクション行列の更新と転送
-		camera_.UpdateMatrix();
+		camera_.TransferMatrix();
+
+		camera_.matView = cameraController_->GetViewProjection().matView;
+		camera_.matProjection = cameraController_->GetViewProjection().matProjection;
 	}
+
+
 }
 
 void GameScene::Draw() {
