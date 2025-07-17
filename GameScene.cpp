@@ -40,6 +40,8 @@ void GameScene::Initialize() {
 	// playerの初期化
 	player_->Initialize(modelPlayer_, &camera_, playerPosition);
 
+	player_->SetMapChipField(mapChipField_);
+
 
 	//カメラコントローラーの生成
 	cameraController_ = new CameraController;
@@ -52,6 +54,9 @@ void GameScene::Initialize() {
 
 	CameraController::Rect cameraArea = {12.0f, 100 - 12.0f, 6.0f, 6.0f};
 	cameraController_->SetMovableArea(cameraArea);
+
+
+
 }
 
 GameScene::~GameScene() {

@@ -17,9 +17,9 @@ void Player::Initialize(KamataEngine::Model* model, KamataEngine::Camera* camera
 	worldTransform_.rotation_.y = std::numbers::pi_v<float> / 2.0;
 }
 
-void Player::Update() {
+// 移動入力
+void Player::InputMove() {
 
-	// 移動入力
 	// 接地状態
 	if (onGround_) {
 		if (Input::GetInstance()->PushKey(DIK_RIGHT) || Input::GetInstance()->PushKey(DIK_LEFT)) {
@@ -68,11 +68,11 @@ void Player::Update() {
 			velocity_.x *= (1.0f - kAttenuation);
 		}
 		if (Input::GetInstance()->PushKey(DIK_UP)) {
-		
-			//ジャンプ速度
+
+			// ジャンプ速度
 			velocity_ += Vector3(0, kJumpAcceleration, 0);
 		}
-		//空中
+		// 空中
 	} else {
 
 		// 落下速度
@@ -82,12 +82,9 @@ void Player::Update() {
 		velocity_.y = std::max(velocity_.y, -kLimutFallSpeed);
 	}
 
-	// 移動
-	worldTransform_.translation_ += velocity_;
+}
 
-	// 行列更新
-	worldTransform_.UpdateMatrix();
-
+void Player::AnimeteTurn() {
 	// 旋回制御
 	if (turnTimer_ > 0.0f) {
 
@@ -106,46 +103,75 @@ void Player::Update() {
 		// 自キャラの角度を設定する
 		worldTransform_.rotation_.y = worldTransform_.EaseInOut(destinationRotationY, turnFirstRotationY_, turnTimer_);
 	}
+}
 
-	//着地フラグ
+//②
+void Player::CheckMapCollision(CollisionMapInfo& info) {
+
+	CheckMapCollision(info);
+	// 
+
+}
+
+void Player::Update() {
+
+	//①移動入力
+	InputMove();
+
+	//②移動量を加味して衝突判定する
+
+	//衝突情報を初期化
+	CollisionMapInfo collisionMapInfo;
+	//移動量に速度の値をコピー
+	collisionMapInfo.move = velocity_;
+
+	//マップ衝突チェック
+	CheckMapCollision(collisionMapInfo);
+
+	AnimeteTurn();
+	// 移動
+	worldTransform_.translation_ += velocity_;
+
+	// 行列更新
+	worldTransform_.UpdateMatrix();
+
+
+	// 着地フラグ
 	bool landing = false;
 
-	//地面との当たり判定
-	//下降中?
+	// 地面との当たり判定
+	// 下降中?
 	if (velocity_.y < 0) {
-	
-		//Y座標が地面以下になったら着地
+
+		// Y座標が地面以下になったら着地
 		if (worldTransform_.translation_.y <= 1.0f) {
 			landing = true;
 		}
-
 	}
 
-	//接地判定
+	// 接地判定
 	if (onGround_) {
-	
-		//ジャンプ開始
+
+		// ジャンプ開始
 		if (velocity_.y > 0.0f) {
-		//空中状態に移行
-			onGround_ = false;	
+			// 空中状態に移行
+			onGround_ = false;
 		}
-	
+
 	} else {
 
-		//着地
+		// 着地
 		if (landing) {
-		//めり込み
+			// めり込み
 			worldTransform_.translation_.y = 1.0f;
-			//摩擦で横方向速度が減衰する
+			// 摩擦で横方向速度が減衰する
 			velocity_.x *= (1.0f - kAcceleration);
-			//下方向速度をリセット
+			// 下方向速度をリセット
 			velocity_.y = 0.0f;
-			//接地状態に移行
+			// 接地状態に移行
 			onGround_ = true;
 		}
-	
 	}
-
 }
 
 void Player::Draw() { model_->Draw(worldTransform_, *camera_); }

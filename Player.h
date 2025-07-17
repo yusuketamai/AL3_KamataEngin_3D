@@ -1,15 +1,41 @@
 #pragma once
 #include "KamataEngine.h"
 
+
+class MapChipField;
+
 class Player {
 public:
+
+	// マップとの当たり判定情報
+	struct CollisionMapInfo {
+
+		//天井衝突フラグ
+		bool ceiling = false;
+		// 着地フラグ
+		bool landing = false;
+		//壁接触フラグ
+		bool hitWall = false;
+
+		Vector3 move;
+	};
+
 	KamataEngine::Vector3 velocity_ = {};
 
 	// 初期化
 	void Initialize(KamataEngine::Model* model, KamataEngine::Camera* camera, const KamataEngine::Vector3& position);
+	
+	void CheckMapCollision(CollisionMapInfo& info);
 
 	// 更新
 	void Update();
+
+	// 移動入力
+	void InputMove();
+
+	void AnimeteTurn();
+
+	
 
 	// 描画
 	void Draw();
@@ -51,7 +77,20 @@ public:
 
 	const KamataEngine::Vector3& GetVelocity() const { return velocity_; }
 
+	void SetMapChipField(MapChipField* mapChipField) {
+
+		mapChipField_ = mapChipField;
+	}
+
+	static inline const float kWidth = 0.8f;
+	static inline const float kHeight = 0.8f;
+
+	
+
 private:
+
+	//マップチップによるフィールド
+	MapChipField* mapChipField_ = nullptr;
 	// ワールド変換データ
 	KamataEngine::WorldTransform worldTransform_;
 
