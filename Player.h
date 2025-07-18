@@ -1,5 +1,6 @@
 #pragma once
 #include "KamataEngine.h"
+#include "GameScene.h"
 
 
 class MapChipField;
@@ -17,14 +18,16 @@ public:
 		//壁接触フラグ
 		bool hitWall = false;
 
-		Vector3 move;
+
+
+		KamataEngine::Vector3 move;
 	};
 
 	KamataEngine::Vector3 velocity_ = {};
 
 	// 初期化
 	void Initialize(KamataEngine::Model* model, KamataEngine::Camera* camera, const KamataEngine::Vector3& position);
-	
+
 	void CheckMapCollision(CollisionMapInfo& info);
 
 	// 更新
@@ -35,7 +38,6 @@ public:
 
 	void AnimeteTurn();
 
-	
 
 	// 描画
 	void Draw();
@@ -85,7 +87,22 @@ public:
 	static inline const float kWidth = 0.8f;
 	static inline const float kHeight = 0.8f;
 
-	
+	// 角
+	enum Corner {
+
+		kRightBottom, // 右下
+		kLeftBottom,  // 左下
+		kRightTop,    // 右上
+		kLeftTop,     // 左上
+
+		kNumCorner // 要素数
+
+	};
+
+	//指定した角の座標計算
+	KamataEngine::Vector3 CornerPosition（const KamataEngine::Vector3& center, Corner corner);
+
+		
 
 private:
 

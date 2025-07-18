@@ -107,9 +107,12 @@ void Player::AnimeteTurn() {
 
 //②
 void Player::CheckMapCollision(CollisionMapInfo& info) {
-
-	CheckMapCollision(info);
-	// 
+	
+	CheckMapCollisionUp(info);
+	//CheckMapCollisionDown(info);
+	//CheckMapCollisionRight(info);
+	//CheckMapCollisionLeft(info);
+	
 
 }
 
@@ -129,6 +132,7 @@ void Player::Update() {
 	CheckMapCollision(collisionMapInfo);
 
 	AnimeteTurn();
+
 	// 移動
 	worldTransform_.translation_ += velocity_;
 
@@ -174,4 +178,7 @@ void Player::Update() {
 	}
 }
 
+
 void Player::Draw() { model_->Draw(worldTransform_, *camera_); }
+
+
