@@ -3,6 +3,7 @@
 #include "GameScene.h"
 
 
+
 class MapChipField;
 
 class Player {
@@ -18,8 +19,6 @@ public:
 		//壁接触フラグ
 		bool hitWall = false;
 
-
-
 		KamataEngine::Vector3 move;
 	};
 
@@ -28,7 +27,11 @@ public:
 	// 初期化
 	void Initialize(KamataEngine::Model* model, KamataEngine::Camera* camera, const KamataEngine::Vector3& position);
 
+	//マップ衝突判定
 	void CheckMapCollision(CollisionMapInfo& info);
+
+	// マップ衝突判定_上
+	void CheckMapCollisionUp(CollisionMapInfo& info);
 
 	// 更新
 	void Update();
@@ -100,9 +103,13 @@ public:
 	};
 
 	//指定した角の座標計算
-	KamataEngine::Vector3 CornerPosition（const KamataEngine::Vector3& center, Corner corner);
+	KamataEngine::Vector3 CornerPosition(const KamataEngine::Vector3& center, Corner corner);
 
+
+	// 隙間
+	static inline const float kBlank = 0.1f;
 		
+	void CheckmapMove(const CollisionMapInfo& info);
 
 private:
 

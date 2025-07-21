@@ -15,6 +15,19 @@ struct MapChipData {
 
 class MapChipField {
 public:
+
+	struct IndexSet {
+		uint32_t xIndex;
+		uint32_t yIndex;
+	};
+
+	struct Rect {
+		float left;
+		float right;
+		float bottom;
+		float top;
+	};
+
 	// ブロックのサイズ
 	static inline const float kBlockWidth = 1.0f;
 	static inline const float kBlockHeight = 1.0f;
@@ -31,9 +44,15 @@ public:
 
 	MapChipType GetmapChiptypeByIndex(uint32_t xIndex, uint32_t yIndex);
 
-	KamataEngine::Vector3 GetMapChippositionByIndex(uint32_t xIndex, uint32_t yIndex);
+	KamataEngine::Vector3 GetMapChipPositionByIndex(uint32_t xIndex, uint32_t yIndex);
 
 	uint32_t GetNumBlockVirtical() const { return kNumBlockVirtical; };
 	uint32_t GetNumBlockHorizontal() const { return kNumBlockHorizontal; };
+
+	IndexSet GetMapChipIndexSetByPosition(const KamataEngine::Vector3 & position);
+
+	Rect GetRectByIndex(uint32_t xIndex, uint32_t yIndex);
+
+	
 
 };

@@ -32,7 +32,7 @@ void GameScene::Initialize() {
 
 
 	//座標をマップチップ番号で指定
-	Vector3 playerPosition = mapChipField_->GetMapChippositionByIndex(1,18);
+	Vector3 playerPosition = mapChipField_->GetMapChipPositionByIndex(1,18);
 	
 	// playerの生成
 	player_ = new Player();
@@ -200,7 +200,7 @@ void GameScene::GenerateBlocks() {
 				WorldTransform* worldTransform = new WorldTransform();
 				worldTransform->Initialize();
 				worldTransformBlocks_[i][j] = worldTransform;
-				worldTransformBlocks_[i][j]->translation_ = mapChipField_->GetMapChippositionByIndex(j, i);
+				worldTransformBlocks_[i][j]->translation_ = mapChipField_->GetMapChipPositionByIndex(j, i);
 			}
 		}
 	}
