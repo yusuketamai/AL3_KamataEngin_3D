@@ -163,20 +163,20 @@ void Player::Update() {
 
 	// ②移動量を加味して衝突判定する
 
-	// 衝突情報を初期化
+	    // 衝突情報を初期化
 	CollisionMapInfo collisionMapInfo;
 	// 移動量に速度の値をコピー
-	//collisionMapInfo.move = velocity_;
-
-	CheckmapMove(collisionMapInfo);
+	collisionMapInfo.move = velocity_;
 
 	// マップ衝突チェック
 	CheckMapCollision(collisionMapInfo);
 
+	CheckmapMove(collisionMapInfo);
+
 	AnimeteTurn();
 
 	// 移動
-	worldTransform_.translation_ += velocity_;
+	//worldTransform_.translation_ += velocity_;
 
 	// 行列更新
 	worldTransform_.UpdateMatrix();
