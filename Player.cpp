@@ -23,6 +23,8 @@ void Player::Update() {
 	// 1移動入力
 	InputMove();
 
+	worldTransform_.UpdateMatrix();
+
 	// 衝突情報を初期化
 	CollisionMapInfo collisionMapInfo;
 	// 移動量に速度の値をコピー
@@ -141,6 +143,14 @@ void Player::CheckMapCollision(CollisionMapInfo& info) {
 	CheckMapCollisionRight(info);
 	CheckMapCollisionLeft(info);
 }
+
+void Player::CheckMapMove(const CollisionMapInfo& info) {
+
+	// 移動
+	worldTransform_.translation_ += info.move;
+}
+
+
 //上
 void Player::CheckMapCollisionUp(CollisionMapInfo& info) {
 
@@ -430,8 +440,3 @@ KamataEngine::Vector3 Player::CornerPosition(const KamataEngine::Vector3& center
 	return center + offsetTable[static_cast<uint32_t>(corner)];
 }
 
-void Player::CheckMapMove(const CollisionMapInfo& info) {
-
-	// 移動
-	worldTransform_.translation_ += info.move;
-}
