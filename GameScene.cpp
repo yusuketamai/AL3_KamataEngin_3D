@@ -11,6 +11,8 @@ void GameScene::Initialize() {
 
 	modelPlayer_ = Model::CreateFromOBJ("player", true);
 
+	modelEnemy_ = Model::CreateFromOBJ("enemy", true);
+
 
 	mapChipField_ = new MapChipField;
 	mapChipField_->LoadMapChipCsv("Resources/blocks.csv");
@@ -33,6 +35,8 @@ void GameScene::Initialize() {
 
 	//座標をマップチップ番号で指定
 	Vector3 playerPosition = mapChipField_->GetMapChipPositionByIndex(1,18);
+
+	Vector3 enemyPosition = mapChipField_->GetMapChipPositionByIndex(5,18);
 	
 	// playerの生成
 	player_ = new Player();
@@ -56,7 +60,11 @@ void GameScene::Initialize() {
 	cameraController_->SetMovableArea(cameraArea);
 
 
-
+	//Enemyの生成
+	enemy_ = new Enemy();
+	
+	// enemyの初期化
+	enemy_->Initialize(modelEnemy_, &camera_, enemyPosition);
 }
 
 GameScene::~GameScene() {
@@ -78,6 +86,10 @@ GameScene::~GameScene() {
 	//playerの開放
 	delete player_;
 	player_ = nullptr;
+
+	//enemyの解放
+	delete enemy_;
+	enemy_ = nullptr;
 
 	//マップチップフィールドの解放
 	delete mapChipField_;
@@ -124,6 +136,8 @@ void GameScene::Update() {
 	//カメラコントローラーの更新
 	cameraController_->UPdate();
 
+	//enemyのUpdate
+	enemy_->Update();
 	
 
 #ifdef _DEBUG
@@ -174,6 +188,8 @@ void GameScene::Draw() {
 	skydome_->Draw();
 
 	player_->Draw();
+
+	enemy_->Draw();
 
 	// 3Dモデルの描画後処理
 	Model::PostDraw();
