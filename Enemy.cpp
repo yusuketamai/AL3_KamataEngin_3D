@@ -41,6 +41,7 @@ void Enemy::Update() {
 	worldTransform_.rotation_.x=
 
 	worldTransform_.UpdateMatrix();
+	//あ
 
 }
 
