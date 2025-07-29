@@ -36,9 +36,9 @@ void Enemy::Update() {
 	//回転アニメーション
 	worldTransform_.rotation_.x = std::sin(walkTimer_ * 5.0f);
 
-	float param = std::sin();
-	flaot degree = kWalkMotionAngleStart + kWalkMotionAngleEnd * (param + 1.0f) / 2.0f;
-	worldTransform_.rotation_.x=
+	float param = std::sin((2 * PI) * walkTimer_ / kWalkMotionAngleTime);
+	float degree = kWalkMotionAngleStart + kWalkMotionAngleEnd * (param + 1.0f) / 2.0f;
+	worldTransform_.rotation_.x = std::sin(degree);
 
 	worldTransform_.UpdateMatrix();
 	//あ
