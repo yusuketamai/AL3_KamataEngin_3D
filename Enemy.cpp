@@ -41,7 +41,7 @@ void Enemy::Update() {
 	worldTransform_.rotation_.x = std::sin(degree);
 
 	worldTransform_.UpdateMatrix();
-	//あ
+	
 
 }
 
