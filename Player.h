@@ -3,6 +3,8 @@
 
 class MapChipField;
 
+class Enemy;
+
 class Player {
 public:
 	enum class LRDirection {
@@ -96,6 +98,8 @@ public:
 	// 7旋回制御
 	void AnimateTurn();
 
+	
+
 	// 指定された角の座標計算
 	KamataEngine::Vector3 CornerPosition(const KamataEngine::Vector3& center, Corner corner);
 
@@ -115,6 +119,14 @@ public:
 
 	// 壁の速度減速率
 	static inline const float kAttenuationWall = 0.5f;
+
+	// ワールド座標を取得
+	Vector3 GetWorldPosition();
+
+	AABB GetAABB();
+
+	// 衝突応答
+	void OnCollision(const Enemy* enemy);
 
 private:
 	// ワールド変換データ

@@ -62,8 +62,14 @@ public:
 	//Enemy3Dモデル
 	KamataEngine::Model* modelEnemy_ = nullptr;
 
-	Enemy* enemy_ = nullptr;
 
+	//削除
+	//Enemy* enemy_ = nullptr;
 
+	//代わりに...
+	std::list<Enemy*> enemys_;
+
+	//全ての当たり判定を行う
+	void CheckAllCollisions();
 
 };

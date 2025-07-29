@@ -1,5 +1,7 @@
 #include "GameScene.h"
-
+#include <algorithm>
+#include <cassert>
+#include <numbers>
 using namespace KamataEngine;
 using namespace MathUtility;
 
@@ -13,7 +15,6 @@ void GameScene::Initialize() {
 
 	modelEnemy_ = Model::CreateFromOBJ("enemy", true);
 
-
 	mapChipField_ = new MapChipField;
 	mapChipField_->LoadMapChipCsv("Resources/blocks.csv");
 
@@ -25,19 +26,17 @@ void GameScene::Initialize() {
 	// skydomeの初期化
 	skydome_->Initialize(modelSkydome_, &camera_);
 
-
 	// カメラの初期化
 	camera_.Initialize();
 
 	// デバックカメラの生成
 	debugCamera_ = new DebugCamera(1280, 720);
 
+	// 座標をマップチップ番号で指定
+	Vector3 playerPosition = mapChipField_->GetMapChipPositionByIndex(1, 18);
 
-	//座標をマップチップ番号で指定
-	Vector3 playerPosition = mapChipField_->GetMapChipPositionByIndex(1,18);
+	// Vector3 enemyPosition = mapChipField_->GetMapChipPositionByIndex(24,18);
 
-	Vector3 enemyPosition = mapChipField_->GetMapChipPositionByIndex(12,18);
-	
 	// playerの生成
 	player_ = new Player();
 
@@ -46,8 +45,7 @@ void GameScene::Initialize() {
 
 	player_->SetMapChipField(mapChipField_);
 
-
-	//カメラコントローラーの生成
+	// カメラコントローラーの生成
 	cameraController_ = new CameraController;
 
 	cameraController_->Initialize();
@@ -59,12 +57,19 @@ void GameScene::Initialize() {
 	CameraController::Rect cameraArea = {12.0f, 100 - 12.0f, 6.0f, 6.0f};
 	cameraController_->SetMovableArea(cameraArea);
 
+	// Enemyの生成
+	for (uint32_t i = 0; i < 5; i++) {
+		// enemy の生成
+		Enemy* newEnemy = new Enemy();
+		// enemyの初期化
+		Vector3 enemyPosition = mapChipField_->GetMapChipPositionByIndex(20 + i, 18);
+		newEnemy->Initialize(modelEnemy_, &camera_, enemyPosition);
 
-	//Enemyの生成
-	enemy_ = new Enemy();
-	
-	// enemyの初期化
-	enemy_->Initialize(modelEnemy_, &camera_, enemyPosition);
+		enemys_.push_back(newEnemy);
+	}
+
+	//// enemyの初期化
+	// enemys_->Initialize(modelEnemy_, &camera_, enemyPosition);
 }
 
 GameScene::~GameScene() {
@@ -79,19 +84,22 @@ GameScene::~GameScene() {
 	delete skydome_;
 	skydome_ = nullptr;
 
-	//モデルplayerの開放
+	// モデルplayerの開放
 	delete modelPlayer_;
 	modelPlayer_ = nullptr;
 
-	//playerの開放
+	// playerの開放
 	delete player_;
 	player_ = nullptr;
 
-	//enemyの解放
-	delete enemy_;
-	enemy_ = nullptr;
+	// enemyの解放
+	for (Enemy* enemy : enemys_) {
+		delete enemy;
+	}
 
-	//マップチップフィールドの解放
+	// enemy_ = nullptr;
+
+	// マップチップフィールドの解放
 	delete mapChipField_;
 
 	// 箱の解放
@@ -127,18 +135,19 @@ void GameScene::Update() {
 	// skydomeのUPdate
 	skydome_->Update();
 
-	//playerのUPdate
+	// playerのUPdate
 	player_->Update();
 
 	// デバックカメラの更新
 	debugCamera_->Update();
 
-	//カメラコントローラーの更新
+	// カメラコントローラーの更新
 	cameraController_->UPdate();
 
-	//enemyのUpdate
-	enemy_->Update();
-	
+	// enemyのUpdate
+	for (Enemy* enemy : enemys_) {
+		enemy->Update();
+	}
 
 #ifdef _DEBUG
 	if (Input::GetInstance()->TriggerKey(DIK_D)) {
@@ -163,7 +172,8 @@ void GameScene::Update() {
 		camera_.matProjection = cameraController_->GetViewProjection().matProjection;
 	}
 
-
+	// 全ての当たり判定を行う
+	CheckAllCollisions();
 }
 
 void GameScene::Draw() {
@@ -189,7 +199,10 @@ void GameScene::Draw() {
 
 	player_->Draw();
 
-	enemy_->Draw();
+	// enemyの描画
+	for (Enemy* enemy : enemys_) {
+		enemy->Draw();
+	}
 
 	// 3Dモデルの描画後処理
 	Model::PostDraw();
@@ -197,12 +210,12 @@ void GameScene::Draw() {
 
 void GameScene::GenerateBlocks() {
 
-	//要素数
+	// 要素数
 	uint32_t numBlockVirtical = mapChipField_->GetNumBlockVirtical();
 	uint32_t numBlockHorizontal = mapChipField_->GetNumBlockHorizontal();
 
 	// 要素数を変更する
-	//列数を設定
+	// 列数を設定
 	worldTransformBlocks_.resize(numBlockVirtical);
 	for (uint32_t i = 0; i < numBlockVirtical; i++) {
 		worldTransformBlocks_[i].resize(numBlockHorizontal);
@@ -220,4 +233,29 @@ void GameScene::GenerateBlocks() {
 			}
 		}
 	}
+}
+
+void GameScene::CheckAllCollisions() {
+
+	// 判定対象1と2の座標
+	AABB aabb1, aabb2;
+
+	// 自キャラの座標
+	aabb1 = player_->GetAABB();
+
+	// 自キャラと散弾全ての当たり判定
+	for (Enemy* enemy : enemys_) {
+		// 散弾の座標
+		aabb2 = enemy->GetAABB();
+
+		// AABB同士の交差判定
+		if (IsCollision(aabb1, aabb2)) {
+			// 自キャラの衝突時間数を呼び出す
+			player_->OnCollision(enemy);
+			// 敵弾の衝突時のコールバックを呼び出す
+			enemy->OnCollision(player_);
+		}
+	}
+	
+
 }
