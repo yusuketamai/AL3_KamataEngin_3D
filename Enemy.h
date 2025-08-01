@@ -1,6 +1,6 @@
 #pragma once
 #include "KamataEngine.h"
-
+#include"Collision.h"
 class Player;
 
 class Enemy {

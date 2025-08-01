@@ -6,6 +6,7 @@
 #include "MapChipField.h"
 #include "CameraController.h"
 #include "Enemy.h"
+#include"Collision.h"
 
 
 class GameScene {
@@ -62,6 +63,7 @@ public:
 	//Enemy3Dモデル
 	KamataEngine::Model* modelEnemy_ = nullptr;
 
+	
 
 	//削除
 	//Enemy* enemy_ = nullptr;

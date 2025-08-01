@@ -4,6 +4,7 @@
 #include<math.h>
 #include<cmath>
 
+
 using namespace KamataEngine;
 
 using namespace MathUtility;

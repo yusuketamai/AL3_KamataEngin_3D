@@ -1,5 +1,7 @@
 #pragma once
 #include "KamataEngine.h"
+#include"Collision.h"
+
 
 class MapChipField;
 
@@ -121,7 +123,7 @@ public:
 	static inline const float kAttenuationWall = 0.5f;
 
 	// ワールド座標を取得
-	Vector3 GetWorldPosition();
+	KamataEngine::Vector3 GetWorldPosition();
 
 	AABB GetAABB();
 

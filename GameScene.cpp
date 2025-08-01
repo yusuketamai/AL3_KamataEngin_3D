@@ -2,6 +2,7 @@
 #include <algorithm>
 #include <cassert>
 #include <numbers>
+
 using namespace KamataEngine;
 using namespace MathUtility;
 
@@ -235,6 +236,7 @@ void GameScene::GenerateBlocks() {
 	}
 }
 
+
 void GameScene::CheckAllCollisions() {
 
 	// 判定対象1と2の座標
@@ -249,7 +251,7 @@ void GameScene::CheckAllCollisions() {
 		aabb2 = enemy->GetAABB();
 
 		// AABB同士の交差判定
-		if (IsCollision(aabb1, aabb2)) {
+		if (aabb1.IsCollision(aabb1, aabb2)) {
 			// 自キャラの衝突時間数を呼び出す
 			player_->OnCollision(enemy);
 			// 敵弾の衝突時のコールバックを呼び出す

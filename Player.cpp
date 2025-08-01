@@ -4,6 +4,7 @@
 #include <algorithm>
 #include <cassert>
 #include <numbers>
+
 using namespace KamataEngine;
 using namespace MathUtility;
 
