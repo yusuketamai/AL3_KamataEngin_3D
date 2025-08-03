@@ -11,6 +11,17 @@
 
 class GameScene {
 public:
+
+	//gameのフェーズ
+	enum class Phase {
+		kPlay,//ゲームプレイ
+		kDeath,//デス演出
+	};
+
+	//ゲームの現在フェーズ(変数)
+	Phase phase_;
+
+
 	// 初期化
 	void Initialize();
 

@@ -75,6 +75,9 @@ void GameScene::Initialize() {
 	deathParticles_ = new DeathParticles;
 	deathParticles_->Initialize(modelParticles_, &camera_, playerPosition);
 
+	//ゲームプレイフェーズから開始
+	phase_ = Phase::kPlay;
+
 	//// enemyの初期化
 	// enemys_->Initialize(modelEnemy_, &camera_, enemyPosition);
 }
@@ -128,39 +131,73 @@ GameScene::~GameScene() {
 }
 
 void GameScene::Update() {
-	// ブロックの更新
-	for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
-		for (WorldTransform* worldTransformBlock : worldTransformBlockLine) {
-			// ブロックの穴あきを許容
-			if (!worldTransformBlock) {
-				continue; // nullチェック
-			}
 
-			// アフィン変換
-			worldTransformBlock->MakeAfinneMatrix();
+	switch (phase_) {
+	case Phase::kDeath:
 
-			// 定数バッファに転送する
-			worldTransformBlock->TransferMatrix();
+
+
+		break;
+	case Phase::kPlay:
+
+		// skydomeのUPdate
+		skydome_->Update();
+
+		// playerのUPdate
+		player_->Update();
+
+		// デバックカメラの更新
+		debugCamera_->Update();
+
+		// カメラコントローラーの更新
+		cameraController_->UPdate();
+
+		// enemyのUpdate
+		for (Enemy* enemy : enemys_) {
+			enemy->Update();
 		}
+
+		// ブロックの更新
+		for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
+			for (WorldTransform* worldTransformBlock : worldTransformBlockLine) {
+				// ブロックの穴あきを許容
+				if (!worldTransformBlock) {
+					continue; // nullチェック
+				}
+
+				// アフィン変換
+				worldTransformBlock->MakeAfinneMatrix();
+
+				// 定数バッファに転送する
+				worldTransformBlock->TransferMatrix();
+			}
+		}
+
+		// 全ての当たり判定を行う
+		CheckAllCollisions();
+
+		// カメラの更新
+		if (isDebugCameraActive_) {
+			// デバックカメラの更新
+			debugCamera_->Update();
+
+			camera_.matView = debugCamera_->GetCamera().matView;
+			camera_.matProjection = debugCamera_->GetCamera().matProjection;
+			// ビュープロダクションの転送
+			camera_.TransferMatrix();
+		} else {
+			// ビュープロダクション行列の更新と転送
+			camera_.TransferMatrix();
+
+			camera_.matView = cameraController_->GetViewProjection().matView;
+			camera_.matProjection = cameraController_->GetViewProjection().matProjection;
+		}
+
+		break;
 	}
 
-	// skydomeのUPdate
-	skydome_->Update();
 
-	// playerのUPdate
-	player_->Update();
-
-	// デバックカメラの更新
-	debugCamera_->Update();
-
-	// カメラコントローラーの更新
-	cameraController_->UPdate();
-
-	// enemyのUpdate
-	for (Enemy* enemy : enemys_) {
-		enemy->Update();
-	}
-
+	
 	// deathParticles_の更新
 	if (deathParticles_) {
 		deathParticles_->Update();
@@ -172,26 +209,6 @@ void GameScene::Update() {
 		isDebugCameraActive_ = !isDebugCameraActive_; // デバックカメラの有効無効を切り替え
 	}
 #endif
-
-	// カメラの更新
-	if (isDebugCameraActive_) {
-		// デバックカメラの更新
-		debugCamera_->Update();
-
-		camera_.matView = debugCamera_->GetCamera().matView;
-		camera_.matProjection = debugCamera_->GetCamera().matProjection;
-		// ビュープロダクションの転送
-		camera_.TransferMatrix();
-	} else {
-		// ビュープロダクション行列の更新と転送
-		camera_.TransferMatrix();
-
-		camera_.matView = cameraController_->GetViewProjection().matView;
-		camera_.matProjection = cameraController_->GetViewProjection().matProjection;
-	}
-
-	// 全ての当たり判定を行う
-	CheckAllCollisions();
 }
 
 void GameScene::Draw() {
