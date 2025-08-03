@@ -1,13 +1,13 @@
 #pragma once
+#include "CameraController.h"
+#include "Collision.h"
+#include "DeathParticles.h"
+#include "Enemy.h"
 #include "KamataEngine.h"
+#include "MapChipField.h"
 #include "Skydome.h"
 #include "player.h"
 #include <vector>
-#include "MapChipField.h"
-#include "CameraController.h"
-#include "Enemy.h"
-#include"Collision.h"
-
 
 class GameScene {
 public:
@@ -32,7 +32,7 @@ public:
 	// カメラ
 	KamataEngine::Camera camera_;
 
-	//マップチップフィールド
+	// マップチップフィールド
 	MapChipField* mapChipField_;
 
 	// デバックカメラ
@@ -41,10 +41,10 @@ public:
 	// デバッグカメラ有効
 	bool isDebugCameraActive_ = false;
 
-	//スカイドーム3Dモデル
+	// スカイドーム3Dモデル
 	KamataEngine::Model* modelSkydome_ = nullptr;
 
-	//skyDome
+	// skyDome
 	Skydome* skydome_ = nullptr;
 
 	// プレイヤー3Dモデル
@@ -52,26 +52,28 @@ public:
 
 	Player* player_ = nullptr;
 
-	//カメラコントローラー3Dモデル
+	// カメラコントローラー3Dモデル
 	KamataEngine::Model* modelcameraController_ = nullptr;
 
-	//CameraController
+	// CameraController
 	CameraController* cameraController_ = nullptr;
 
 	void GenerateBlocks();
 
-	//Enemy3Dモデル
+	// Enemy3Dモデル
 	KamataEngine::Model* modelEnemy_ = nullptr;
 
-	
+	// 削除
+	// Enemy* enemy_ = nullptr;
 
-	//削除
-	//Enemy* enemy_ = nullptr;
-
-	//代わりに...
+	// 代わりに...
 	std::list<Enemy*> enemys_;
 
-	//全ての当たり判定を行う
+	// 全ての当たり判定を行う
 	void CheckAllCollisions();
 
+	// パーティクル3Dモデル
+	KamataEngine::Model* modelParticles_ = nullptr;
+
+	DeathParticles* deathParticles_ = nullptr;
 };

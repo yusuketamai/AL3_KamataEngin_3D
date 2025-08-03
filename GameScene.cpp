@@ -19,6 +19,8 @@ void GameScene::Initialize() {
 	mapChipField_ = new MapChipField;
 	mapChipField_->LoadMapChipCsv("Resources/blocks.csv");
 
+	modelParticles_ = Model::CreateFromOBJ("deathParticle", true);
+
 	GenerateBlocks();
 
 	// skydomeの生成
@@ -34,7 +36,7 @@ void GameScene::Initialize() {
 	debugCamera_ = new DebugCamera(1280, 720);
 
 	// 座標をマップチップ番号で指定
-	Vector3 playerPosition = mapChipField_->GetMapChipPositionByIndex(1, 18);
+	Vector3 playerPosition = mapChipField_->GetMapChipPositionByIndex(5, 18);
 
 	// Vector3 enemyPosition = mapChipField_->GetMapChipPositionByIndex(24,18);
 
@@ -69,6 +71,10 @@ void GameScene::Initialize() {
 		enemys_.push_back(newEnemy);
 	}
 
+	//仮の生成処理、後で消す
+	deathParticles_ = new DeathParticles;
+	deathParticles_->Initialize(modelParticles_, &camera_, playerPosition);
+
 	//// enemyの初期化
 	// enemys_->Initialize(modelEnemy_, &camera_, enemyPosition);
 }
@@ -97,6 +103,11 @@ GameScene::~GameScene() {
 	for (Enemy* enemy : enemys_) {
 		delete enemy;
 	}
+
+	// deathParticles_の解放
+	delete deathParticles_;
+	deathParticles_ = nullptr;
+
 
 	// enemy_ = nullptr;
 
@@ -149,6 +160,12 @@ void GameScene::Update() {
 	for (Enemy* enemy : enemys_) {
 		enemy->Update();
 	}
+
+	// deathParticles_の更新
+	if (deathParticles_) {
+		deathParticles_->Update();
+	}
+
 
 #ifdef _DEBUG
 	if (Input::GetInstance()->TriggerKey(DIK_D)) {
@@ -203,6 +220,11 @@ void GameScene::Draw() {
 	// enemyの描画
 	for (Enemy* enemy : enemys_) {
 		enemy->Draw();
+	}
+
+	// deathParticles_の更新
+	if (deathParticles_) {
+		deathParticles_->Draw();
 	}
 
 	// 3Dモデルの描画後処理
