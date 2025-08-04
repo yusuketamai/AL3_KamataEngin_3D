@@ -1,7 +1,11 @@
 #pragma once
 #include "KamataEngine.h"
+#include "TitleScene.h"
 #include <numbers>
 #include <array>
+
+
+
 
 
 class DeathParticles {
@@ -32,6 +36,9 @@ public:
 
 	// 終了フラグ
 	bool isFinished_ = false;
+
+	// デスフラグのゲッター
+	bool IsFinished() const { return finished_; }
 
 	// 経過時間カウント
 	float counter_ = 0.0f;

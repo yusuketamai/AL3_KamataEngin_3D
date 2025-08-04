@@ -8,8 +8,6 @@
 using namespace KamataEngine;
 using namespace MathUtility;
 
-
-
 void Player::Initialize(KamataEngine::Model* model, KamataEngine::Camera* camera, const Vector3& position) {
 	assert(model);
 	assert(camera);
@@ -153,8 +151,7 @@ void Player::CheckMapMove(const CollisionMapInfo& info) {
 	worldTransform_.translation_ += info.move;
 }
 
-
-//上
+// 上
 void Player::CheckMapCollisionUp(CollisionMapInfo& info) {
 
 	// 上昇あり？
@@ -197,7 +194,7 @@ void Player::CheckMapCollisionUp(CollisionMapInfo& info) {
 		info.ceiling = true;
 	}
 }
-//下
+// 下
 void Player::CheckMapCollisionDown(CollisionMapInfo& info) {
 
 	// 下降あり？
@@ -352,7 +349,6 @@ void Player::CheckMapCollisionLeft(CollisionMapInfo& info) {
 	}
 }
 
-
 // 4天井に接触している場合の処理
 void Player::CheckMapCeiling(const CollisionMapInfo& info) {
 
@@ -428,8 +424,12 @@ void Player::CheckMapLanding(const CollisionMapInfo& info) {
 	}
 }
 
+void Player::Draw() {
 
-void Player::Draw() { model_->Draw(worldTransform_, *camera_); }
+	if (!isDead_) {
+		model_->Draw(worldTransform_, *camera_);
+	}
+}
 
 KamataEngine::Vector3 Player::CornerPosition(const KamataEngine::Vector3& center, Corner corner) {
 
@@ -443,8 +443,8 @@ KamataEngine::Vector3 Player::CornerPosition(const KamataEngine::Vector3& center
 	return center + offsetTable[static_cast<uint32_t>(corner)];
 }
 
-Vector3 Player::GetWorldPosition() { 
-	
+Vector3 Player::GetWorldPosition() const {
+
 	// ワールド座標を入れる変数
 	Vector3 worldPos;
 
@@ -452,13 +452,12 @@ Vector3 Player::GetWorldPosition() {
 	worldPos.x = worldTransform_.matWorld_.m[3][0];
 	worldPos.y = worldTransform_.matWorld_.m[3][1];
 	worldPos.z = worldTransform_.matWorld_.m[3][2];
-	
-	return worldPos; 
 
+	return worldPos;
 }
 
-AABB Player::GetAABB() { 
-	
+AABB Player::GetAABB() {
+
 	Vector3 worldPos = GetWorldPosition();
 
 	AABB aabb;
@@ -466,16 +465,11 @@ AABB Player::GetAABB() {
 	aabb.min = {worldPos.x - kWidth / 2.0f, worldPos.y - kHeight / 2.0f, worldPos.z - kWidth / 2.0f};
 	aabb.max = {worldPos.x + kWidth / 2.0f, worldPos.y + kHeight / 2.0f, worldPos.z + kWidth / 2.0f};
 
-	return aabb; 
-
-
+	return aabb;
 }
 
 void Player::OnCollision(const Enemy* enemy) {
 
 	(void)enemy;
-	//ジャンプ開始(仮処理)
-	velocity_ += Vector3(0, 1, 0);
-
+	isDead_ = true;
 }
-

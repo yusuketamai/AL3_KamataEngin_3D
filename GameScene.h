@@ -8,6 +8,7 @@
 #include "Skydome.h"
 #include "player.h"
 #include <vector>
+#include "TitleScene.h"
 
 class GameScene {
 public:
@@ -20,7 +21,6 @@ public:
 
 	//ゲームの現在フェーズ(変数)
 	Phase phase_;
-
 
 	// 初期化
 	void Initialize();
@@ -87,4 +87,15 @@ public:
 	KamataEngine::Model* modelParticles_ = nullptr;
 
 	DeathParticles* deathParticles_ = nullptr;
+
+	void ChangePhase();
+
+	//終了フラグ
+	bool finished_ = false;
+
+	//デスフラグのゲッター
+	bool IsFinished() const { return finished_; }
+
+	
+
 };

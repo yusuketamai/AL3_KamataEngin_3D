@@ -21,6 +21,7 @@ void GameScene::Initialize() {
 
 	modelParticles_ = Model::CreateFromOBJ("deathParticle", true);
 
+
 	GenerateBlocks();
 
 	// skydomeの生成
@@ -31,6 +32,10 @@ void GameScene::Initialize() {
 
 	// カメラの初期化
 	camera_.Initialize();
+
+	////titleの初期化
+	//titleScene_->Initialize();
+	
 
 	// デバックカメラの生成
 	debugCamera_ = new DebugCamera(1280, 720);
@@ -71,15 +76,18 @@ void GameScene::Initialize() {
 		enemys_.push_back(newEnemy);
 	}
 
-	//仮の生成処理、後で消す
+	// 仮の生成処理、後で消す
 	deathParticles_ = new DeathParticles;
 	deathParticles_->Initialize(modelParticles_, &camera_, playerPosition);
 
-	//ゲームプレイフェーズから開始
+	// ゲームプレイフェーズから開始
 	phase_ = Phase::kPlay;
 
 	//// enemyの初期化
 	// enemys_->Initialize(modelEnemy_, &camera_, enemyPosition);
+
+
+
 }
 
 GameScene::~GameScene() {
@@ -111,7 +119,6 @@ GameScene::~GameScene() {
 	delete deathParticles_;
 	deathParticles_ = nullptr;
 
-
 	// enemy_ = nullptr;
 
 	// マップチップフィールドの解放
@@ -135,7 +142,51 @@ void GameScene::Update() {
 	switch (phase_) {
 	case Phase::kDeath:
 
+		// skydomeのUPdate
+		skydome_->Update();
 
+		// enemyのUpdate
+		for (Enemy* enemy : enemys_) {
+			enemy->Update();
+		}
+
+		// deathParticles_の更新
+		if (deathParticles_) {
+			deathParticles_->Update();
+		}
+
+		// カメラの更新
+		if (isDebugCameraActive_) {
+			// デバックカメラの更新
+			debugCamera_->Update();
+
+			camera_.matView = debugCamera_->GetCamera().matView;
+			camera_.matProjection = debugCamera_->GetCamera().matProjection;
+			// ビュープロダクションの転送
+			camera_.TransferMatrix();
+		} else {
+			// ビュープロダクション行列の更新と転送
+			camera_.TransferMatrix();
+
+			camera_.matView = cameraController_->GetViewProjection().matView;
+			camera_.matProjection = cameraController_->GetViewProjection().matProjection;
+		}
+
+		// ブロックの更新
+		for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
+			for (WorldTransform* worldTransformBlock : worldTransformBlockLine) {
+				// ブロックの穴あきを許容
+				if (!worldTransformBlock) {
+					continue; // nullチェック
+				}
+
+				// アフィン変換
+				worldTransformBlock->MakeAfinneMatrix();
+
+				// 定数バッファに転送する
+				worldTransformBlock->TransferMatrix();
+			}
+		}
 
 		break;
 	case Phase::kPlay:
@@ -193,15 +244,14 @@ void GameScene::Update() {
 			camera_.matProjection = cameraController_->GetViewProjection().matProjection;
 		}
 
+		ChangePhase();
 		break;
 	}
 
-
-	
-	// deathParticles_の更新
-	if (deathParticles_) {
-		deathParticles_->Update();
+	if (deathParticles_ != nullptr && deathParticles_->IsFinished()) {
+		finished_ = true;
 	}
+
 
 
 #ifdef _DEBUG
@@ -246,6 +296,9 @@ void GameScene::Draw() {
 
 	// 3Dモデルの描画後処理
 	Model::PostDraw();
+
+	
+	
 }
 
 void GameScene::GenerateBlocks() {
@@ -273,8 +326,8 @@ void GameScene::GenerateBlocks() {
 			}
 		}
 	}
-}
 
+}
 
 void GameScene::CheckAllCollisions() {
 
@@ -297,6 +350,34 @@ void GameScene::CheckAllCollisions() {
 			enemy->OnCollision(player_);
 		}
 	}
-	
+}
 
+void GameScene::ChangePhase() {
+
+	switch (phase_) {
+	case GameScene::Phase::kPlay:
+
+		if (player_->isDead_) {
+
+			// 死亡演出
+			phase_ = Phase::kDeath;
+
+			// 自キャラの座標を取得
+			const Vector3& deathParticlesPosition = player_->GetWorldPosition();
+
+			// パーティクル生成
+			deathParticles_ = new DeathParticles();
+
+			// 3Dモデルの設定
+			modelParticles_ = Model::CreateFromOBJ("deathParticle", true);
+
+			deathParticles_->Initialize(modelParticles_, &camera_, deathParticlesPosition);
+			break;
+
+		/*case GameScene::Phase::kDeath:
+
+
+			break;*/
+		}
+	}
 }

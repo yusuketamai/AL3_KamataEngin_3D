@@ -123,12 +123,18 @@ public:
 	static inline const float kAttenuationWall = 0.5f;
 
 	// ワールド座標を取得
-	KamataEngine::Vector3 GetWorldPosition();
+	KamataEngine::Vector3 GetWorldPosition() const;
 
 	AABB GetAABB();
 
 	// 衝突応答
 	void OnCollision(const Enemy* enemy);
+
+	//デスフラグ
+	bool isDead_ = false;
+
+	//デスフラグのgetter
+	bool IsDead() const { return isDead_; }
 
 private:
 	// ワールド変換データ
