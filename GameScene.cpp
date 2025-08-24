@@ -21,7 +21,6 @@ void GameScene::Initialize() {
 
 	modelParticles_ = Model::CreateFromOBJ("deathParticle", true);
 
-
 	GenerateBlocks();
 
 	// skydomeの生成
@@ -34,8 +33,7 @@ void GameScene::Initialize() {
 	camera_.Initialize();
 
 	////titleの初期化
-	//titleScene_->Initialize();
-	
+	// titleScene_->Initialize();
 
 	// デバックカメラの生成
 	debugCamera_ = new DebugCamera(1280, 720);
@@ -80,14 +78,14 @@ void GameScene::Initialize() {
 	deathParticles_ = new DeathParticles;
 	deathParticles_->Initialize(modelParticles_, &camera_, playerPosition);
 
-	// ゲームプレイフェーズから開始
-	phase_ = Phase::kPlay;
+	// フェードインから開始
+	phase_ = Phase::kFadeIn;
 
-	//// enemyの初期化
-	// enemys_->Initialize(modelEnemy_, &camera_, enemyPosition);
+	// フェード
+	fade_ = new Fade();
+	fade_->Initialize();
 
-
-
+	fade_->Start(Fade::Status::FadeIn, 1.0f);
 }
 
 GameScene::~GameScene() {
@@ -135,6 +133,9 @@ GameScene::~GameScene() {
 	// デバックカメラの解放
 	delete debugCamera_;
 	debugCamera_ = nullptr;
+
+	// フェード
+	delete fade_;
 }
 
 void GameScene::Update() {
@@ -186,6 +187,12 @@ void GameScene::Update() {
 				// 定数バッファに転送する
 				worldTransformBlock->TransferMatrix();
 			}
+		}
+
+		if (deathParticles_ != nullptr && deathParticles_->IsFinished()) {
+			//フェードアウト開始
+			phase_ = Phase::kFadeOut;
+			fade_->Start(Fade::Status::FadeOut, 1.0f);
 		}
 
 		break;
@@ -246,10 +253,16 @@ void GameScene::Update() {
 
 		ChangePhase();
 		break;
-	}
 
-	if (deathParticles_ != nullptr && deathParticles_->IsFinished()) {
-		finished_ = true;
+	case Phase::kFadeIn:
+		// フェード
+		fade_->Update();
+		break;
+
+	case Phase::kFadeOut:
+		// フェード
+		fade_->Update();
+		break;
 	}
 
 
@@ -282,7 +295,11 @@ void GameScene::Draw() {
 
 	skydome_->Draw();
 
-	player_->Draw();
+	//自キャラの描画
+	//if (phase_ == Phase::kPlay || phase_ == Phase::kFadeIn) {
+		player_->Draw();
+	//}
+	
 
 	// enemyの描画
 	for (Enemy* enemy : enemys_) {
@@ -297,8 +314,8 @@ void GameScene::Draw() {
 	// 3Dモデルの描画後処理
 	Model::PostDraw();
 
-	
-	
+	// フェード
+	fade_->Draw();
 }
 
 void GameScene::GenerateBlocks() {
@@ -326,7 +343,6 @@ void GameScene::GenerateBlocks() {
 			}
 		}
 	}
-
 }
 
 void GameScene::CheckAllCollisions() {
@@ -351,7 +367,7 @@ void GameScene::CheckAllCollisions() {
 		}
 	}
 }
-
+//フェーズの切り替え
 void GameScene::ChangePhase() {
 
 	switch (phase_) {
@@ -373,11 +389,27 @@ void GameScene::ChangePhase() {
 
 			deathParticles_->Initialize(modelParticles_, &camera_, deathParticlesPosition);
 			break;
-
-		/*case GameScene::Phase::kDeath:
-
-
-			break;*/
 		}
+		break;
+	case GameScene::Phase::kDeath:
+		//デスパーティクル処理
+		if (deathParticles_->IsFinished()) {
+		//フェードアウト開始
+			phase_ = Phase::kFadeOut;
+		fade_->Start(Fade::Status::FadeOut, 1.0f);
+		
+		}
+		break;
+	case GameScene::Phase::kFadeIn:
+		if (fade_->IsFinished()) {
+		//ゲームプレイへ切り替え
+			phase_ = Phase::kPlay;
+		}
+		break;
+	case GameScene::Phase::kFadeOut:
+		if (fade_->IsFinished()) {
+			finished_ = true;
+		}
+		break;
 	}
 }

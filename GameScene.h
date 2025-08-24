@@ -9,14 +9,17 @@
 #include "player.h"
 #include <vector>
 #include "TitleScene.h"
+#include "Fade.h"
 
 class GameScene {
 public:
 
 	//gameのフェーズ
 	enum class Phase {
+		kFadeIn,//フェードイン
 		kPlay,//ゲームプレイ
 		kDeath,//デス演出
+		kFadeOut, // フェードアウト
 	};
 
 	//ゲームの現在フェーズ(変数)
@@ -96,6 +99,7 @@ public:
 	//デスフラグのゲッター
 	bool IsFinished() const { return finished_; }
 
-	
+	// フェード
+	Fade* fade_ = nullptr;
 
 };
